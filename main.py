@@ -5,6 +5,16 @@ Simple Chess AI
 author: dowusu
 """
 
+def generate_default_board():
+    return [['rtl','ktl','btl','Qt','Kt','btr','ktr','rtr'],
+            ['pt1','pt2','pt3','pt4','pt5','pt6','pt7','pt8'],
+            ['','','','','','','',''],
+            ['','','','','','','',''],
+            ['','','','','','','',''],
+            ['','','','','','','',''],
+            ['pb1','pb2','pb3','pb4','pb5','pb6','pb7','pb8'],
+            ['rbl','kbl','bbl','Qb','Kb','bbr','kbr','rbr']]
+
 class Player:
 
     def __init__(self):
@@ -13,6 +23,8 @@ class Player:
 class Game:
 
     def __init__(self):
+
+        self.board = generate_default_board() 
 
         self.move_constants =
          {'knight': {(-2,-1), (-2,1), (-1,2), (1,2), (2,1), (2,-1), (1,-2), (-1,-2)},
@@ -28,6 +40,12 @@ class Game:
           'pawn': lambda position: get_positions(position, 'pawn'),
           'king': lambda position: get_position(position, 'king')
          }
+
+    def respond_to_move(self, move):
+        pass
+
+    def display_board(self):
+        return self.board
 
     def get_diagonal(self, position):
         """
@@ -48,4 +66,4 @@ class Game:
 
 if __name__ == "__main__":
 
-
+    pass
