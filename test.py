@@ -14,8 +14,8 @@ def generate_default_board():
             ['','','','','','','',''],
             ['','','','','','','',''],
             ['','','','','','','',''],
-            ['rbl','kbl','bbl','Qb','Kb','bbr','kbr','rbr'],
-            ['pb1','pb2','pb3','pb4','pb5','pb6','pb7','pb8']] 
+            ['pb1','pb2','pb3','pb4','pb5','pb6','pb7','pb8'],
+            ['rbl','kbl','bbl','Qb','Kb','bbr','kbr','rbr']] 
 
 class Test(unittest.TestCase):
 
