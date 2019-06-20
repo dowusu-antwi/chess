@@ -61,27 +61,29 @@ class Game:
         """
         pass
 
-    def display_board(self)
+    def display_board(self):
         """
         This will return the list representing the chess board
         """
         return self.board
 
-    def get_upper_diagonal(self, position)
+    def get_upper_diagonal(self, position):
 
+        print("position:",position)
         row, col = position
         new_position = (row+1, col+1)
+        print("new position:",new_position)
         if self.in_bounds(new_position):
-            return {new_position} | self.get_diagonal(new_position)
+            return {new_position} | self.get_upper_diagonal(new_position)
         return set()
 
 
-    def get_lower_diagonal(self, position)
+    def get_lower_diagonal(self, position):
 
         row, col = position
         new_position = (row-1, col-1)
         if self.in_bounds(new_position):
-            return {new_position} | self.get_diagonal(new_position)
+            return {new_position} | self.get_lower_diagonal(new_position)
         return set()
 
     def get_diagonal(self, position):
@@ -106,4 +108,5 @@ class Game:
 
 if __name__ == "__main__":
 
-    pass
+    g = Game()
+    print(g.get_diagonal((0,1)))
