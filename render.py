@@ -9,7 +9,7 @@ This will use PyQt to render the chess board
 """
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QLabel
 from PyQt5.QtGui import QPixmap
 import sys
 
@@ -41,6 +41,14 @@ class App(QtWidgets.QWidget):
         self.resize_window(width, height)
         #self.timer = self.setup_timer()
 
+        ########################################
+        # draw an image to the screen
+        label = QLabel(self) 
+        pixmap = QPixmap('sprites/w_queen.png')
+        label.setPixmap(pixmap)
+        label.setGeometry(0,0,pixmap.width(),pixmap.height())
+        ########################################
+
         # this keeps track of whether rendering
         #  has begun, first frame is skipped
         #  automatically so rendering starts
@@ -56,6 +64,17 @@ class App(QtWidgets.QWidget):
         This resizes the application window.
         """
         self.setGeometry(0,0,width,height)
+
+
+    def draw_rectanlges():
+        """
+        """
+        pass
+
+    def draw_objects():
+        """
+        """
+        pass
 
     def paintEvent(self, event):
         """
