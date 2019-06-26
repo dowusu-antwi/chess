@@ -8,8 +8,8 @@ This will use PyQt to render the chess board
  to the screen
 """
 
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap
 import sys
 
@@ -41,14 +41,6 @@ class App(QtWidgets.QWidget):
         self.resize_window(width, height)
         #self.timer = self.setup_timer()
 
-        ########################################
-        # draw an image to the screen
-        label = QLabel(self) 
-        pixmap = QPixmap('sprites/w_queen.png')
-        label.setPixmap(pixmap)
-        label.setGeometry(0,0,pixmap.width(),pixmap.height())
-        ########################################
-
         # this keeps track of whether rendering
         #  has begun, first frame is skipped
         #  automatically so rendering starts
@@ -66,22 +58,41 @@ class App(QtWidgets.QWidget):
         self.setGeometry(0,0,width,height)
 
 
-    def draw_rectanlges():
+    def draw_board(self, painter):
         """
         """
         pass
 
-    def draw_objects():
+    def draw_piece_on_square(self, painter):
         """
         """
-        pass
+        # prepares chess piece image
+        pixmap = QPixmap('sprites/w_queen.png')
+
+
+        # sets square color
+        painter.setBrush(QtGui.QColor(40,40,40))
+
+        # draws chess piece over square
+
+        painter.drawRect(0,0,pixmap.width(),pixmap.height())
+        painter.drawPixmap(0,0,pixmap)
+
+    def draw_objects(self, painter):
+        """
+        """
+        self.draw_piece_on_square(painter)
 
     def paintEvent(self, event):
         """
         This method paints elements to the screen, as
          given by PyQt
         """
-        pass
+
+        painter = QtGui.QPainter()
+        painter.begin(self)
+        self.draw_objects(painter)
+        painter.end()
 
 if __name__ == "__main__":
 
