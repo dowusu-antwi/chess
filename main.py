@@ -6,6 +6,7 @@ author: dowusu
 """
 
 def generate_default_board():
+    # key: rtl -> rook-top-left
     return [['rtl','ktl','btl','Qt','Kt','btr','ktr','rtr'],
             ['pt1','pt2','pt3','pt4','pt5','pt6','pt7','pt8'],
             ['','','','','','','',''],

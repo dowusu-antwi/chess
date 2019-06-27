@@ -8,6 +8,7 @@ This will use PyQt to render the chess board
  to the screen
 """
 
+import main
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap
@@ -18,7 +19,7 @@ class App(QtWidgets.QWidget):
     This is the main 'widget' class
     """
 
-    def __init__(self, window_dimensions):
+    def __init__(self, pixel_dimensions):
         # this creates a QApplication object, passing
         #  in sys.argv to get cmd line arguments passed
         #  to the script
@@ -37,7 +38,8 @@ class App(QtWidgets.QWidget):
         super().__init__()
 
         self.setWindowTitle("Chess")
-        width, height = window_dimensions
+        pixel_width, pixel_height = pixel_dimensions
+        width, height = pixel_width*8, pixel_height*8
         self.resize_window(width, height)
         #self.timer = self.setup_timer()
 
@@ -46,6 +48,13 @@ class App(QtWidgets.QWidget):
         #  automatically so rendering starts
         #  after the first frame
         self.drawn = None
+
+        # this creates the game board from
+        #  the main file and defines info
+        #  for rendering (e.g., pixel size)
+        self.game = main.Game()
+        self.pixel_dimensions = pixel_dimensions
+        self.pieces_mapped_to_file = {'Qb': 'w_queen.png'}
 
         # this opens the hidden PyQt window, showing
         #  it on the screen
@@ -60,8 +69,42 @@ class App(QtWidgets.QWidget):
 
     def draw_board(self, painter):
         """
+        This will iterate over the game board and draw each
+         chess square in addition to drawing each chess piece
+         if one is needed
         """
-        pass
+
+        # this iterates over board, draws square
+        #  then draws chess piece on top
+
+        pixel_width, pixel_height = self.pixel_dimensions
+
+        color = 'black'
+        x_init, y_init = 0,0
+        for row in self.game.board:
+            
+            for square in row:
+
+                if color == 'black':
+                    painter.setBrush(QtGui.QColor(40,40,40))
+                elif color == 'white':
+                    painter.setBrush(QtGui.QColor(255,255,255))
+
+                painter.drawRect(x_init, y_init, x_init+pixel_width, y_init+pixel_height)
+
+                if square in self.pieces_mapped_to_file:
+                    filename = self.pieces_mapped_to_file[square]
+                    pixmap = QPixmap('sprites/'+filename)
+                    pixmap = pixmap.scaled(pixmap.width()-10, pixmap.height()-10)
+                    painter.drawPixmap(x_init, y_init, pixmap)
+
+                color = 'white' if color == 'black' else 'black'
+
+                x_init += pixel_width
+
+            color = 'white' if color == 'black' else 'black'
+            x_init = 0
+            y_init += pixel_height
 
     def draw_piece_on_square(self, painter):
         """
@@ -69,19 +112,19 @@ class App(QtWidgets.QWidget):
         # prepares chess piece image
         pixmap = QPixmap('sprites/w_queen.png')
 
-
         # sets square color
         painter.setBrush(QtGui.QColor(40,40,40))
 
         # draws chess piece over square
-
-        painter.drawRect(0,0,pixmap.width(),pixmap.height())
-        painter.drawPixmap(0,0,pixmap)
+        scaled_pixmap = pixmap.scaled(pixmap.width()*2, pixmap.height()*2)
+        painter.drawRect(0,0,pixmap.width()*2,pixmap.height()*2)
+        painter.drawPixmap(0,0,scaled_pixmap)
 
     def draw_objects(self, painter):
         """
         """
-        self.draw_piece_on_square(painter)
+        #self.draw_piece_on_square(painter)
+        self.draw_board(painter)
 
     def paintEvent(self, event):
         """
@@ -96,7 +139,7 @@ class App(QtWidgets.QWidget):
 
 if __name__ == "__main__":
 
-    new_app = App([400, 400])
+    new_app = App([50, 50])
     # app.exec_() runs main app loop, ret status code
     #  upon exit; sys.exit passes on status code to
     #  parent process (i.e., the shell), so that if
