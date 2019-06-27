@@ -54,7 +54,10 @@ class App(QtWidgets.QWidget):
         #  for rendering (e.g., pixel size)
         self.game = main.Game()
         self.pixel_dimensions = pixel_dimensions
-        self.pieces_mapped_to_file = {'Qb': 'w_queen.png'}
+        self.pieces_mapped_to_file = {'Qb': 'w_queen.png', 'pt': 'b_pawn.png', 'pb': 'w_pawn.png',
+                                      'Qt': 'b_queen.png', 'Kt': 'b_king.png', 'Kb': 'w_king.png',
+                                      'rt': 'b_rook.png', 'rb': 'w_rook.png', 'bb': 'w_bishop.png',
+                                      'bt': 'b_bishop.png', 'kt': 'b_knight.png', 'kb': 'w_knight.png'}
 
         # this opens the hidden PyQt window, showing
         #  it on the screen
@@ -95,8 +98,8 @@ class App(QtWidgets.QWidget):
                 if square in self.pieces_mapped_to_file:
                     filename = self.pieces_mapped_to_file[square]
                     pixmap = QPixmap('sprites/'+filename)
-                    pixmap = pixmap.scaled(pixmap.width()-10, pixmap.height()-10)
-                    painter.drawPixmap(x_init, y_init, pixmap)
+                    pixmap = pixmap.scaled(pixel_width-pixel_width//10, pixel_height-pixel_height//10)
+                    painter.drawPixmap(x_init+pixel_width//20, y_init+pixel_height//20, pixmap)
 
                 color = 'white' if color == 'black' else 'black'
 
@@ -139,7 +142,7 @@ class App(QtWidgets.QWidget):
 
 if __name__ == "__main__":
 
-    new_app = App([50, 50])
+    new_app = App([100, 100])
     # app.exec_() runs main app loop, ret status code
     #  upon exit; sys.exit passes on status code to
     #  parent process (i.e., the shell), so that if

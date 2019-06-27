@@ -7,14 +7,14 @@ author: dowusu
 
 def generate_default_board():
     # key: rtl -> rook-top-left
-    return [['rtl','ktl','btl','Qt','Kt','btr','ktr','rtr'],
-            ['pt1','pt2','pt3','pt4','pt5','pt6','pt7','pt8'],
+    return [['rt','kt','bt','Qt','Kt','bt','kt','rt'],
+            ['pt','pt','pt','pt','pt','pt','pt','pt'],
             ['','','','','','','',''],
             ['','','','','','','',''],
             ['','','','','','','',''],
             ['','','','','','','',''],
-            ['pb1','pb2','pb3','pb4','pb5','pb6','pb7','pb8'],
-            ['rbl','kbl','bbl','Qb','Kb','bbr','kbr','rbr']]
+            ['pb','pb','pb','pb','pb','pb','pb','pb'],
+            ['rb','kb','bb','Qb','Kb','bb','kb','rb']]
 
 class Player:
 
