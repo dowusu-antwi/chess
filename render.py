@@ -57,7 +57,8 @@ class App(QtWidgets.QWidget):
         self.pieces_mapped_to_file = {'Qb': 'w_queen.png', 'pt': 'b_pawn.png', 'pb': 'w_pawn.png',
                                       'Qt': 'b_queen.png', 'Kt': 'b_king.png', 'Kb': 'w_king.png',
                                       'rt': 'b_rook.png', 'rb': 'w_rook.png', 'bb': 'w_bishop.png',
-                                      'bt': 'b_bishop.png', 'kt': 'b_knight.png', 'kb': 'w_knight.png'}
+                                      'bt': 'b_bishop.png', 'kt': 'b_knight.png', 'kb': 'w_knight.png',
+                                      'pb': 'w_pawn.png'}
 
         # this opens the hidden PyQt window, showing
         #  it on the screen
@@ -89,9 +90,9 @@ class App(QtWidgets.QWidget):
             for square in row:
 
                 if color == 'black':
-                    painter.setBrush(QtGui.QColor(40,40,40))
+                    painter.setBrush(QtGui.QColor(192,64,0))
                 elif color == 'white':
-                    painter.setBrush(QtGui.QColor(255,255,255))
+                    painter.setBrush(QtGui.QColor(210,180,140))
 
                 painter.drawRect(x_init, y_init, x_init+pixel_width, y_init+pixel_height)
 
@@ -142,7 +143,7 @@ class App(QtWidgets.QWidget):
 
 if __name__ == "__main__":
 
-    new_app = App([100, 100])
+    new_app = App([90, 90])
     # app.exec_() runs main app loop, ret status code
     #  upon exit; sys.exit passes on status code to
     #  parent process (i.e., the shell), so that if
