@@ -45,7 +45,15 @@ class Game:
         self.board = generate_default_board()
         self.moves_mapped_to_positions, self.positions_mapped_to_moves = map_moves_to_positions(width, height)
         self.width, self.height = width, height
-
+        
+        self.piece_names = {
+          'p': 'pawn',
+          'r': 'rook',
+          'k': 'knight',
+          'b': 'bishop',
+          'Q': 'queen',
+          'K': 'king'
+        }
         self.moves = {
           'bishop': self.get_diagonal,
           'rook': lambda position: self.get_horizontal(position) | self.get_vertical(position),
@@ -66,8 +74,8 @@ class Game:
          of the board, False otherwise
         """
         row, col = position
-        return ((row >= 0 and row <= self.height) and
-                (col >= 0 and col <= self.width))
+        return ((row >= 0 and row < self.height) and
+                (col >= 0 and col < self.width))
 
     def respond_to_move(self, move):
         """
@@ -79,23 +87,27 @@ class Game:
         # this will get the piece at the queried position,
         #  will notify user if there is no piece there
         current_algebraic, new_algebraic = move
-        row, column = self.moves_mapped_to_position[current_algebraic]
-        piece = self.board[row][column]
-        if piece == '':
+        row, column = self.moves_mapped_to_positions[current_algebraic]
+        if self.board[row][column] == '':
             print("There is no piece at %s" % current_algebraic)
             return
+        piece, location = self.board[row][column]
 
         # this will get all possible moves from this position
         #  and will make the move if the new position is a
         #  valid move
-        piece_name = piece_names[piece]
-        moves = self.moves[piece_name][(row, column)]
+        piece_name = self.piece_names[piece]
+        moves = self.moves[piece_name]((row, column))
         
-        new_row, new_column = self.moves_mapped_to_position[new_algebraic]
+        new_row, new_column = self.moves_mapped_to_positions[new_algebraic]
+        print("old position %s, %s" % (row, column))
+        print("new algebraic %s" % new_algebraic)
+        print("new position %s, %s" % (new_row, new_column))
+        print("moves %s" % moves)
         if (new_row, new_column) in moves:
             # this will change the game board to reflect the move
-            self.game_board[row][column]  = piece
-            self.game_board[new_row][new_column] = piece
+            self.board[row][column] = ''
+            self.board[new_row][new_column] = piece+location
 
     def display_board(self):
         """
@@ -103,23 +115,36 @@ class Game:
         """
         return self.board
 
-    def get_upper_diagonal(self, position):
+    def get_lower_right_diagonal(self, position):
 
-        print("position:",position)
         row, col = position
         new_position = (row+1, col+1)
-        print("new position:",new_position)
         if self.in_bounds(new_position):
-            return {new_position} | self.get_upper_diagonal(new_position)
+            return {new_position} | self.get_lower_right_diagonal(new_position)
         return set()
 
-
-    def get_lower_diagonal(self, position):
+    def get_upper_left_diagonal(self, position):
 
         row, col = position
         new_position = (row-1, col-1)
         if self.in_bounds(new_position):
-            return {new_position} | self.get_lower_diagonal(new_position)
+            return {new_position} | self.get_upper_left_diagonal(new_position)
+        return set()
+
+    def get_upper_right_diagonal(self, position):
+
+        row, col = position
+        new_position = (row-1, col+1)
+        if self.in_bounds(new_position):
+            return {new_position} | self.get_upper_right_diagonal(new_position)
+        return set()
+
+    def get_lower_left_diagonal(self, position):
+
+        row, col = position
+        new_position = (row+1, col-1)
+        if self.in_bounds(new_position):
+            return {new_position} | self.get_lower_left_diagonal(new_position)
         return set()
 
     def get_diagonal(self, position):
@@ -128,9 +153,11 @@ class Game:
          from the given position
         """
 
-        upper = self.get_upper_diagonal(position)
-        lower = self.get_lower_diagonal(position)
-        return upper | lower
+        upper_left = self.get_upper_left_diagonal(position)
+        lower_right = self.get_lower_right_diagonal(position)
+        upper_right = self.get_upper_right_diagonal(position)
+        lower_left = self.get_lower_left_diagonal(position)
+        return upper_left | lower_right | upper_right | lower_left
 
     def get_horizontal(self, position):
         """
@@ -145,4 +172,4 @@ class Game:
 if __name__ == "__main__":
 
     g = Game()
-    print(g.get_diagonal((0,1)))
+    #print(g.get_diagonal((0,1)))
