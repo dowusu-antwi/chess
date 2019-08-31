@@ -41,6 +41,7 @@ class App(QtWidgets.QWidget):
         pixel_width, pixel_height = pixel_dimensions
         width, height = pixel_width*8, pixel_height*8
         self.resize_window(width, height)
+        self.width, self.height = width, height
         #self.timer = self.setup_timer()
 
         # this keeps track of whether rendering
@@ -80,21 +81,23 @@ class App(QtWidgets.QWidget):
 
         # this iterates over board, draws square
         #  then draws chess piece on top
+        #
+        # drawRect takes (width, height) as last
+        #  two parameters
 
         pixel_width, pixel_height = self.pixel_dimensions
 
         color = 'black'
-        x_init, y_init = 0,0
+        x_init, y_init = 0, 0
         for row in self.game.board:
             
             for square in row:
-
                 if color == 'black':
                     painter.setBrush(QtGui.QColor(192,64,0))
                 elif color == 'white':
                     painter.setBrush(QtGui.QColor(210,180,140))
 
-                painter.drawRect(x_init, y_init, x_init+pixel_width, y_init+pixel_height)
+                painter.drawRect(x_init, y_init, pixel_width, pixel_height)
 
                 if square in self.pieces_mapped_to_file:
                     filename = self.pieces_mapped_to_file[square]
