@@ -113,6 +113,17 @@ class App(QtWidgets.QWidget):
             x_init = 0
             y_init += pixel_height
 
+    def paintEvent(self, event):
+        """
+        This method paints elements to the screen, as
+         given by PyQt
+        """
+
+        painter = QtGui.QPainter()
+        painter.begin(self)
+        self.draw_board(painter)
+        painter.end()
+
     def draw_piece_on_square(self, painter):
         """
         Gets saved PNG (queen) and draws to screen 
@@ -127,17 +138,6 @@ class App(QtWidgets.QWidget):
         scaled_pixmap = pixmap.scaled(pixmap.width()*2, pixmap.height()*2)
         painter.drawRect(0,0,pixmap.width()*2,pixmap.height()*2)
         painter.drawPixmap(0,0,scaled_pixmap)
-
-    def paintEvent(self, event):
-        """
-        This method paints elements to the screen, as
-         given by PyQt
-        """
-
-        painter = QtGui.QPainter()
-        painter.begin(self)
-        self.draw_board(painter)
-        painter.end()
 
 if __name__ == "__main__":
 

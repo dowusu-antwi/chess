@@ -5,28 +5,31 @@ Simple Chess AI
 author: dowusu
 """
 
+empty_square = '  '
+
 def generate_default_board():
     # key: rtl -> rook-top-left
-    return [['rt','kt','bt','Qt','Kt','bt','kt','rt'],
-            ['pt','pt','pt','pt','pt','pt','pt','pt'],
-            ['','','','','','','',''],
-            ['','','','','','','',''],
-            ['','','','','','','',''],
-            ['','','','','','','',''],
-            ['pb','pb','pb','pb','pb','pb','pb','pb'],
-            ['rb','kb','bb','Qb','Kb','bb','kb','rb']]
+    top = [['rt','kt','bt','Qt','Kt','bt','kt','rt'],
+           ['pt','pt','pt','pt','pt','pt','pt','pt']]
+    mid = [[empty_square]*8] * 4
+    bottom = [['pb','pb','pb','pb','pb','pb','pb','pb'],
+              ['rb','kb','bb','Qb','Kb','bb','kb','rb']]
+    return top + mid + bottom
 
-def map_moves_to_positions(width, height):
+def map_algebraic_to_position(width, height):
     """
-    This will create a dictionary of lists mapping
-     moves to positions on the board; currently, max
-     board dimensions are [26,10] (letters by numbers)
+    This creates a dictionary of lists mapping
+     algebraic notation for positions to 
+     coordinate position locations on the board
+     
+    Given limits of algebraic notation, max board
+     dimensions are [26,10] (letters by numbers)
     """
 
     alph, nums = 'abcdefghijklmnopqrstuvwxyz', '87654321'
-    move_position_mapping = {alph[column]+nums[row]: (row, column) for row in range(height) for column in range(width)}
-    position_move_mapping = {(row, column):alph[column]+nums[row] for row in range(height) for column in range(width)}
-    return move_position_mapping, position_move_mapping
+    algebraic_position_mapping = {alph[column]+nums[row]: (row, column) for row in range(height) for column in range(width)}
+    position_algebraic_mapping = {(row, column):alph[column]+nums[row] for row in range(height) for column in range(width)}
+    return algebraic_position_mapping, position_algebraic_mapping
 
 class Player:
 
@@ -43,7 +46,7 @@ class Game:
         width, height = 8, 8
 
         self.board = generate_default_board()
-        self.moves_mapped_to_positions, self.positions_mapped_to_moves = map_moves_to_positions(width, height)
+        self.algebraic_mapped_to_position, self.position_mapped_to_algebraic = map_algebraic_to_position(width, height)
         self.width, self.height = width, height
         
         self.piece_names = {
@@ -87,10 +90,11 @@ class Game:
         # this will get the piece at the queried position,
         #  will notify user if there is no piece there
         current_algebraic, new_algebraic = move
-        row, column = self.moves_mapped_to_positions[current_algebraic]
-        if self.board[row][column] == '':
-            print("There is no piece at %s" % current_algebraic)
+        row, column = current_algebraic
+        if self.board[row][column] == empty_square:
+            print("There is no piece at %s" % (current_algebraic,))
             return
+        row, column = self.algebraic_mapped_to_position[current_algebraic]
         piece, location = self.board[row][column]
 
         # this will get all possible moves from this position
@@ -99,7 +103,7 @@ class Game:
         piece_name = self.piece_names[piece]
         moves = self.moves[piece_name]((row, column))
         
-        new_row, new_column = self.moves_mapped_to_positions[new_algebraic]
+        new_row, new_column = self.agebraic_mapped_to_position[new_algebraic]
         print("old position %s, %s" % (row, column))
         print("new algebraic %s" % new_algebraic)
         print("new position %s, %s" % (new_row, new_column))
@@ -113,7 +117,10 @@ class Game:
         """
         This will return the list representing the chess board
         """
-        return self.board
+        print('*' + '*'.join(['**']*len(self.board[0])) + '*')
+        for row in self.board:
+            print('|' + ' '.join([('%s' % square) for square in row]) + '|')
+        print('*' + '*'.join(['**']*len(self.board[0])) + '*')
 
     def get_lower_right_diagonal(self, position):
 
