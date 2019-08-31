@@ -11,7 +11,7 @@ def generate_default_board():
     # key: rtl -> rook-top-left
     top = [['rt','kt','bt','Qt','Kt','bt','kt','rt'],
            ['pt','pt','pt','pt','pt','pt','pt','pt']]
-    mid = [[empty_square]*8] * 4
+    mid = [[empty_square]*8 for _ in range(4)]
     bottom = [['pb','pb','pb','pb','pb','pb','pb','pb'],
               ['rb','kb','bb','Qb','Kb','bb','kb','rb']]
     return top + mid + bottom
@@ -90,11 +90,10 @@ class Game:
         # this will get the piece at the queried position,
         #  will notify user if there is no piece there
         current_algebraic, new_algebraic = move
-        row, column = current_algebraic
+        row, column = self.algebraic_mapped_to_position[current_algebraic]
         if self.board[row][column] == empty_square:
             print("There is no piece at %s" % (current_algebraic,))
             return
-        row, column = self.algebraic_mapped_to_position[current_algebraic]
         piece, location = self.board[row][column]
 
         # this will get all possible moves from this position
@@ -103,14 +102,14 @@ class Game:
         piece_name = self.piece_names[piece]
         moves = self.moves[piece_name]((row, column))
         
-        new_row, new_column = self.agebraic_mapped_to_position[new_algebraic]
+        new_row, new_column = self.algebraic_mapped_to_position[new_algebraic]
         print("old position %s, %s" % (row, column))
         print("new algebraic %s" % new_algebraic)
         print("new position %s, %s" % (new_row, new_column))
         print("moves %s" % moves)
         if (new_row, new_column) in moves:
             # this will change the game board to reflect the move
-            self.board[row][column] = ''
+            self.board[row][column] = empty_square
             self.board[new_row][new_column] = piece+location
 
     def display_board(self):
