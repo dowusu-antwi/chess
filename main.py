@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Simple Chess AI
+Chess
 author: dowusu
 """
 
